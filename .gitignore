@@ -106,3 +106,4 @@ ENV/
 .DS_Store
 expert_data
 *.pyc
+*.pkl
