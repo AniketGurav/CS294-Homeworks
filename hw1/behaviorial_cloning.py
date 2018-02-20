@@ -31,8 +31,8 @@ def fc(x, size, name):
 
 def policy_function(observation_):
     with tf.variable_scope('policy_function'):
-        x = fc(observation_, 128, 'fc_1')
-        x = fc(x, 64, 'fc_2')
+        x = fc(observation_, 256, 'fc_1')
+        x = fc(x, 128, 'fc_2')
         x = fc(x, NUM_ACTIONS, 'fc_3')
     return x
 
@@ -45,7 +45,7 @@ def policy_function(observation_):
 #     return label
 
 
-def load_exper_data(data_path):
+def load_expert_data(data_path):
 
     with open(data_path, 'rb') as f:
         data = pickle.load(f)
@@ -74,7 +74,7 @@ def train(sess, model, data, batch_size, epoches=100):
         tf.summary.scalar('loss', loss)
 
     with tf.name_scope('train_step'):
-        train_step = tf.train.AdamOptimizer(learning_rate=1e-4).minimize(loss)
+        train_step = tf.train.AdamOptimizer(learning_rate=5e-5).minimize(loss)
 
     sess.run(tf.global_variables_initializer())
 
@@ -100,13 +100,13 @@ def train(sess, model, data, batch_size, epoches=100):
 
 def __test_train__():
 
-    data = load_exper_data('expert_data/Hopper-v1_20.pkl')
+    data = load_expert_data('expert_data/Hopper-v1_20.pkl')
 
     with tf.Session() as sess:
         train(sess, policy_function, data, batch_size=64)
 
 
-def behavioral_cloning(batch_size=64, epoches=50):
+def behavioral_cloning(batch_size=64, epoches=60):
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--render', action='store_true')
@@ -115,7 +115,7 @@ def behavioral_cloning(batch_size=64, epoches=50):
     args = parser.parse_args()
 
     print("Loading Expert Data")
-    data = load_exper_data('expert_data/Hopper-v1_20.pkl')
+    data = load_expert_data('expert_data/Hopper-v1_100.pkl')
 
     train_state = data['observations']
     train_action = data['actions']
