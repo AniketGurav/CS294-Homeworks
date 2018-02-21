@@ -22,6 +22,7 @@ def fc(x, size, name):
         w = tf.get_variable('w', shape=[in_, size])
         b = tf.get_variable('b', shape=[size])
         result = tf.add(tf.matmul(x, w), b)
+        result = tf.nn.leaky_relu(result)
     return result
 
 
@@ -51,8 +52,8 @@ def main():
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--render', action='store_true')
-    parser.add_argument('--num_rollouts', type=int, default=5, help='Number of roll outs')
-    parser.add_argument('--epoches', type=int, default=20, help='dagger epoches')
+    parser.add_argument('--num_rollouts', type=int, default=1, help='Number of roll outs')
+    parser.add_argument('--epoches', type=int, default=50, help='dagger epoches')
     parser.add_argument('--envname', type=str)
     parser.add_argument('--expert_policy_file', type=str)
     batch_size = 64
@@ -61,7 +62,7 @@ def main():
 
     memory = []
 
-    data = load_expert_data('expert_data/Hopper-v1_100.pkl')
+    data = load_expert_data('expert_data/Hopper-v1_20.pkl')
 
     print ("Load Data From File ...")
     provided_state = data['observations']
