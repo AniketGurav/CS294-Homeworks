@@ -291,7 +291,6 @@ def learn(env,
 
             #####
 
-
         ### 4. Log progress
         episode_rewards = get_wrapper_by_name(env, "Monitor").get_episode_rewards()
         if len(episode_rewards) > 0:
